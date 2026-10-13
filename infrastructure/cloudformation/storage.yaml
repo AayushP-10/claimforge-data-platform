@@ -1,0 +1,44 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: ClaimForge Data Lake S3 Infrastructure
+
+Resources:
+
+  DataLakeBucket:
+    Type: AWS::S3::Bucket
+
+    Properties:
+      BucketNamePrefix: claimforge-lake
+      BucketNamespace: account-regional
+
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+
+      Tags:
+        - Key: Project
+          Value: ClaimForge
+        - Key: Environment
+          Value: dev
+
+Outputs:
+
+  DataLakeBucketName:
+    Description: Name of the ClaimForge S3 bucket
+    Value: !Ref DataLakeBucket
+
+  DataLakeBucketArn:
+    Description: ARN of the ClaimForge S3 bucket
+    Value: !GetAtt DataLakeBucket.Arn
